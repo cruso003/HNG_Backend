@@ -19,7 +19,7 @@ app.get('/', (req, res) => {
 });
 
 app.get('/api/hello', async (req, res) => {
-    const visitorName = req.query.visitor_name || 'Mark';
+    const visitorName = req.query.visitor_name ? decodeURIComponent(req.query.visitor_name) : 'Mark';
     const clientIp = req.headers['x-forwarded-for'] || req.socket.remoteAddress || '8.8.8.8';
     console.log(`Client IP: ${clientIp}`);
 
