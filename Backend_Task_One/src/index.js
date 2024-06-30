@@ -4,14 +4,14 @@ const app = express();
 const port = process.env.PORT || 3000;
 
 app.get('/api/hello', async (req, res) => {
-    const visitorName = req.query.visitor_name || 'Visitor';
+    const visitorName = req.query.visitor_name || 'Mark';
     const clientIp = req.headers['x-forwarded-for'] || req.socket.remoteAddress || '8.8.8.8';
     console.log(`Client IP: ${clientIp}`);
 
     try {
         const geoRes = await axios.get(`https://ipapi.co/${clientIp}/json/`);
         console.log(geoRes.data);
-        const location = geoRes.data.city || 'Kampala';
+        const location = geoRes.data.city || 'Kampalay';
         const latitude = geoRes.data.latitude || '40.7128';
         const longitude = geoRes.data.longitude || '-74.0060';
         const tempRes = await axios.get(`https://api.open-meteo.com/v1/forecast?latitude=${latitude}&longitude=${longitude}&current_weather=true`);
