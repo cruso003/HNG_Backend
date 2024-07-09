@@ -6,11 +6,12 @@ const prisma = new PrismaClient();
 beforeAll(async () => {
   await prisma.$connect();
   await prisma.user.deleteMany(); // Clear users before starting tests
-  await prisma.organization.upsert({  // Note the correct casing here: organization, not organisation
-    where: { name: 'Default Organisation' },
+  await prisma.organisation.upsert({
+    where: { orgId: 'jV8T1MGn99oePf3vPkx9qaxtpxo3TiOr' },
     update: {},
     create: { name: 'Default Organisation' }
   });
+  
 });
 
 afterAll(async () => {
@@ -21,34 +22,41 @@ afterAll(async () => {
 describe('Auth Endpoints', () => {
   describe('POST /auth/register', () => {
     it('should register a user successfully with default organisation', async () => {
+      const firstName = 'John';
+      const lastName = 'Doe';
+      const email = 'john.doe@example.com';
+      const password = 'password';
+      const phone = '1234567890';
+
       const res = await request(app)
         .post('/auth/register')
         .send({
-          firstName: 'John',
-          lastName: 'Doe',
-          email: 'john.doe@example.com',
-          password: 'password',
-          phone: '1234567890'
+          firstName,
+          lastName,
+          email,
+          password,
+          phone
         });
 
       expect(res.statusCode).toEqual(201);
       expect(res.body).toHaveProperty('status', 'success');
       expect(res.body.data).toHaveProperty('accessToken');
       expect(res.body.data.user).toMatchObject({
-        firstName: 'John',
-        lastName: 'Doe',
-        email: 'john.doe@example.com',
-        phone: '1234567890'
+        firstName,
+        lastName,
+        email,
+        phone
       });
 
-      // Verify default organization name
+      // Verify default organization name dynamically
+      const expectedOrgName = `${firstName}'s Organisation`;
       const user = await prisma.user.findUnique({
-        where: { email: 'john.doe@example.com' },
+        where: { email },
         include: { organisations: true }
       });
       expect(user).toBeDefined();
       expect(user.organisations.length).toBe(1);
-      expect(user.organisations[0].name).toBe("Default Organisation");
+      expect(user.organisations[0].name).toBe(expectedOrgName);
     });
 
     it('should fail registration if firstName is missing', async () => {

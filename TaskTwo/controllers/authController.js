@@ -39,14 +39,14 @@ const register = async (req, res) => {
         email,
         password: hashedPassword,
         phone,
-        organizations: {
+        organisations: {
           create: {
             name: `${firstName}'s Organisation`,
           },
         },
       },
       include: {
-        organizations: true,
+        organisations: true,
       },
     });
 
