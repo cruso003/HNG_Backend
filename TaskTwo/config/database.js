@@ -1,15 +1,8 @@
-const { Sequelize } = require('sequelize');
-const config = require('./config.json');
-require('dotenv').config();
+import pg from 'pg';
+import { Sequelize } from 'sequelize';
 
-const env = process.env.NODE_ENV || 'development';
-const dbConfig = config[env];
-
-const sequelize = new Sequelize(dbConfig.database, dbConfig.username, dbConfig.password, {
-  host: dbConfig.host,
-  dialect: dbConfig.dialect,
-  dialectOptions: dbConfig.dialectOptions,
-  logging: false, // Set to true if you want to see SQL queries
+const sequelize = new Sequelize('postgres://default:dHuMgma5t3eX@ep-shy-truth-a4ziuvid-pooler.us-east-1.aws.neon.tech:5432/verceldb?sslmode=require', {
+  dialectModule: pg
 });
 
 module.exports = sequelize;
