@@ -3,25 +3,22 @@ const jwt = require('jsonwebtoken');
 const { PrismaClient } = require('@prisma/client');
 const prisma = new PrismaClient();
 
-const JWT_SECRET = process.env.JWT_SECRET || "WRorycNEfwjCAaeUsQkwWVrsGfOcoPWq";
+const JWT_SECRET = process.env.JWT_SECRET || "your_jwt_secret";
 
 const register = async (req, res) => {
   const { firstName, lastName, email, password, phone } = req.body;
 
-  // Check if required fields are missing
   const errors = [];
   if (!firstName) errors.push({ field: "firstName", message: "First name is required" });
   if (!lastName) errors.push({ field: "lastName", message: "Last name is required" });
   if (!email) errors.push({ field: "email", message: "Email is required" });
   if (!password) errors.push({ field: "password", message: "Password is required" });
-  if (!phone) errors.push({ field: "phone", message: "Phone is required" });
 
   if (errors.length > 0) {
     return res.status(422).json({ status: "Bad request", errors });
   }
 
   try {
-    // Check if user already exists
     const existingUser = await prisma.user.findUnique({ where: { email } });
     if (existingUser) {
       return res.status(422).json({
@@ -30,7 +27,6 @@ const register = async (req, res) => {
       });
     }
 
-    // Create new user
     const hashedPassword = await bcrypt.hash(password, 10);
     const user = await prisma.user.create({
       data: {
@@ -50,7 +46,6 @@ const register = async (req, res) => {
       },
     });
 
-    // Generate JWT
     const accessToken = jwt.sign({ userId: user.userId }, JWT_SECRET, { expiresIn: '1h' });
 
     return res.status(201).json({
