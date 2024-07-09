@@ -5,15 +5,13 @@
   "scripts": {
     "start": "node index.js",
     "test": "jest",
-    "build": "echo 'No build step necessary'",
-    "postinstall": "npm install pg"
+    "build": "echo 'No build step necessary'"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "description": "",
   "dependencies": {
-    "@prisma/client": "^5.16.1",
     "bcryptjs": "^2.4.3",
     "body-parser": "^1.20.2",
     "config": "^3.3.12",
