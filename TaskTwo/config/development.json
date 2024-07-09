@@ -1,0 +1,9 @@
+{
+    "POSTGRES_URL": "postgres://default:dHuMgma5t3eX@ep-shy-truth-a4ziuvid-pooler.us-east-1.aws.neon.tech:5432/verceldb?sslmode=require",
+    "POSTGRES_USER": "default",
+    "POSTGRES_PASSWORD":"dHuMgma5t3eX",
+    "POSTGRES_HOST":"ep-shy-truth-a4ziuvid-pooler.us-east-1.aws.neon.tech",
+    "POSTGRES_DATABASE":"verceldb",
+    "JWT_SECRET":"WRorycNEfwjCAaeUsQkwWVrsGfOcoPWq",
+    "PORT":3000
+}

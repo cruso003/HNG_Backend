@@ -1,23 +1,41 @@
 {
   "development": {
-    "username": "henrique",
-    "password": null,
-    "database": "auth_app",
-    "host": "127.0.0.1",
-    "dialect": "postgres"
+    "username": "default",
+    "password": "dHuMgma5t3eX",
+    "database": "verceldb",
+    "host": "ep-shy-truth-a4ziuvid-pooler.us-east-1.aws.neon.tech",
+    "dialect": "postgres",
+    "dialectOptions": {
+      "ssl": {
+        "require": true,
+        "rejectUnauthorized": false
+      }
+    }
   },
   "test": {
-   "username": "henrique",
-    "password": null,
-    "database": "auth_app",
-    "host": "127.0.0.1",
-    "dialect": "postgres"
+    "username": "default",
+    "password": "dHuMgma5t3eX",
+    "database": "verceldb",
+    "host": "ep-shy-truth-a4ziuvid-pooler.us-east-1.aws.neon.tech",
+    "dialect": "postgres",
+    "dialectOptions": {
+      "ssl": {
+        "require": true,
+        "rejectUnauthorized": false
+      }
+    }
   },
   "production": {
-   "username": "henrique",
-    "password": null,
-    "database": "auth_app",
-    "host": "127.0.0.1",
-    "dialect": "postgres"
+    "username": "default",
+    "password": "dHuMgma5t3eX",
+    "database": "verceldb",
+    "host": "ep-shy-truth-a4ziuvid-pooler.us-east-1.aws.neon.tech",
+    "dialect": "postgres",
+    "dialectOptions": {
+      "ssl": {
+        "require": true,
+        "rejectUnauthorized": false
+      }
+    }
   }
 }

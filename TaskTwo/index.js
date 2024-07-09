@@ -2,6 +2,7 @@ const express = require('express');
 const bodyParser = require('body-parser');
 const authRoutes = require('./routes/authRoutes');
 const { sequelize } = require('./models');
+const config = require("config");
 
 const app = express();
 app.use(bodyParser.json());
@@ -40,7 +41,7 @@ app.get('/', (req, res) => {
   res.send(welcomeHtml);
 });
 
-const PORT = process.env.PORT || 3000;
+const PORT = process.env.PORT || config.get("PORT")|| 3000;
 
 if (require.main === module) {
   sequelize.sync().then(() => {
