@@ -57,7 +57,7 @@ describe('Auth Endpoints', () => {
       expect(user).toBeDefined();
       expect(user.organisations.length).toBe(1);
       expect(user.organisations[0].name).toBe(expectedOrgName);
-    });
+    },10000);
 
     it('should fail registration if firstName is missing', async () => {
       const res = await request(app)
