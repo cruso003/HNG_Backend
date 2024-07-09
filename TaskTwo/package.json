@@ -5,7 +5,8 @@
   "scripts": {
     "start": "node index.js",
     "test": "jest",
-    "build": "echo 'No build step necessary'"
+    "build": "echo 'No build step necessary'",
+    "postinstall": "npm install pg"
   },
   "keywords": [],
   "author": "",
