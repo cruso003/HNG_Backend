@@ -5,7 +5,7 @@ const prisma = new PrismaClient();
 const JWT_SECRET = process.env.JWT_SECRET || "WRorycNEfwjCAaeUsQkwWVrsGfOcoPWq";
 
 const authMiddleware = async (req, res, next) => {
-  const authHeader = req.headers.authorization;
+  const authHeader = req.headers.authorisation;
   if (!authHeader || !authHeader.startsWith('Bearer ')) {
     return res.status(401).json({
       status: "Unauthorized",
