@@ -1,12 +1,12 @@
 const express = require('express');
 const bodyParser = require('body-parser');
+const { PrismaClient } = require('@prisma/client');
 const authRoutes = require('./routes/authRoutes');
-const { sequelize } = require('./models');
-const config = require("config");
 
+const prisma = new PrismaClient();
 const app = express();
-app.use(bodyParser.json());
 
+app.use(bodyParser.json());
 app.use('/auth', authRoutes);
 
 // Serve a welcome HTML page at the root route
@@ -41,14 +41,12 @@ app.get('/', (req, res) => {
   res.send(welcomeHtml);
 });
 
-const PORT = process.env.PORT || config.get("PORT")|| 3000;
+const PORT = process.env.PORT || 3000;
 
 if (require.main === module) {
-  sequelize.sync().then(() => {
-    app.listen(PORT, () => {
-      console.log(`Server is running on port ${PORT}`);
-    });
+  app.listen(PORT, () => {
+    console.log(`Server is running on port ${PORT}`);
   });
-} else {
-  module.exports = app;
 }
+
+module.exports = app;

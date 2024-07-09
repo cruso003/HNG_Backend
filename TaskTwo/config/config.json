@@ -1,41 +1,23 @@
 {
   "development": {
-    "username": "default",
-    "password": "dHuMgma5t3eX",
-    "database": "verceldb",
-    "host": "ep-shy-truth-a4ziuvid-pooler.us-east-1.aws.neon.tech",
-    "dialect": "postgres",
-    "dialectOptions": {
-      "ssl": {
-        "require": true,
-        "rejectUnauthorized": false
-      }
-    }
+    "username": "henrique",
+    "password": "maddogcoding",
+    "database": "auth_app",
+    "host": "127.0.0.1",
+    "dialect": "postgres"
   },
   "test": {
-    "username": "default",
-    "password": "dHuMgma5t3eX",
-    "database": "verceldb",
-    "host": "ep-shy-truth-a4ziuvid-pooler.us-east-1.aws.neon.tech",
-    "dialect": "postgres",
-    "dialectOptions": {
-      "ssl": {
-        "require": true,
-        "rejectUnauthorized": false
-      }
-    }
+   "username": "henrique",
+    "password": "maddogcoding",
+    "database": "auth_app",
+    "host": "127.0.0.1",
+    "dialect": "postgres"
   },
   "production": {
-    "username": "default",
-    "password": "dHuMgma5t3eX",
-    "database": "verceldb",
-    "host": "ep-shy-truth-a4ziuvid-pooler.us-east-1.aws.neon.tech",
-    "dialect": "postgres",
-    "dialectOptions": {
-      "ssl": {
-        "require": true,
-        "rejectUnauthorized": false
-      }
-    }
+   "username": "henrique",
+    "password": "maddogcoding",
+    "database": "auth_app",
+    "host": "127.0.0.1",
+    "dialect": "postgres"
   }
 }

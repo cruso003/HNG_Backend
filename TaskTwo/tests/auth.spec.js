@@ -1,11 +1,22 @@
 const request = require('supertest');
 const app = require('../index');
-const { sequelize, Organisation, User } = require('../models');
+const { PrismaClient } = require('@prisma/client');
+const prisma = new PrismaClient();
 
 beforeAll(async () => {
-  await sequelize.sync({ force: true });
-  await Organisation.create({ name: 'Default Organisation' });
+  await prisma.$connect();
+  await prisma.user.deleteMany(); // Clear users before starting tests
+  await prisma.organization.upsert({  // Note the correct casing here: organization, not organisation
+    where: { name: 'Default Organisation' },
+    update: {},
+    create: { name: 'Default Organisation' }
+  });
 });
+
+afterAll(async () => {
+  await prisma.$disconnect();
+});
+
 
 describe('Auth Endpoints', () => {
   describe('POST /auth/register', () => {
@@ -31,14 +42,14 @@ describe('Auth Endpoints', () => {
       });
 
       // Verify default organization name
-      const user = await User.findOne({ where: { email: 'john.doe@example.com' } });
+      const user = await prisma.user.findUnique({
+        where: { email: 'john.doe@example.com' },
+        include: { organisations: true }
+      });
       expect(user).toBeDefined();
-      const organisations = await user.getOrganisations();
-      expect(organisations.length).toBe(1);
-      expect(organisations[0].name).toBe('Default Organisation');
+      expect(user.organisations.length).toBe(1);
+      expect(user.organisations[0].name).toBe("Default Organisation");
     });
-
-
 
     it('should fail registration if firstName is missing', async () => {
       const res = await request(app)
@@ -49,7 +60,7 @@ describe('Auth Endpoints', () => {
           password: 'password',
           phone: '1234567890'
         });
-    
+
       expect(res.statusCode).toEqual(422);
       expect(res.body).toHaveProperty('status', 'Bad request');
       expect(res.body).toHaveProperty('errors');
@@ -57,7 +68,7 @@ describe('Auth Endpoints', () => {
         { field: "firstName", message: "First name is required" }
       ]);
     });
-    
+
     it('should fail registration if lastName is missing', async () => {
       const res = await request(app)
         .post('/auth/register')
@@ -67,7 +78,7 @@ describe('Auth Endpoints', () => {
           password: 'password',
           phone: '1234567890'
         });
-    
+
       expect(res.statusCode).toEqual(422);
       expect(res.body).toHaveProperty('status', 'Bad request');
       expect(res.body).toHaveProperty('errors');
@@ -75,7 +86,7 @@ describe('Auth Endpoints', () => {
         { field: "lastName", message: "Last name is required" }
       ]);
     });
-    
+
     it('should fail registration if email is missing', async () => {
       const res = await request(app)
         .post('/auth/register')
@@ -85,7 +96,7 @@ describe('Auth Endpoints', () => {
           password: 'password',
           phone: '1234567890'
         });
-    
+
       expect(res.statusCode).toEqual(422);
       expect(res.body).toHaveProperty('status', 'Bad request');
       expect(res.body).toHaveProperty('errors');
@@ -93,7 +104,7 @@ describe('Auth Endpoints', () => {
         { field: "email", message: "Email is required" }
       ]);
     });
-    
+
     it('should fail registration if password is missing', async () => {
       const res = await request(app)
         .post('/auth/register')
@@ -103,7 +114,7 @@ describe('Auth Endpoints', () => {
           email: 'john.doe@example.com',
           phone: '1234567890'
         });
-    
+
       expect(res.statusCode).toEqual(422);
       expect(res.body).toHaveProperty('status', 'Bad request');
       expect(res.body).toHaveProperty('errors');
