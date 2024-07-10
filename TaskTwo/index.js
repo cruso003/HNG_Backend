@@ -35,8 +35,8 @@ app.get('/', (req, res) => {
       </style>
     </head>
     <body>
-      <h1>Welcome to My Backend Service</h1>
-      <p>This is the root route of the application.</p>
+      <h1>Welcome to HNG Backend Stage Task</h1>
+      <p>This is the just root route of the application. Just to have something nice</p>
     </body>
     </html>
   `;
