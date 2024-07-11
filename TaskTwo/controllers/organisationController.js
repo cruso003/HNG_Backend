@@ -7,7 +7,7 @@ const createOrganisation = async (req, res) => {
   if (!name) {
     return res.status(400).json({
       status: "Bad Request",
-      message: "Organisation name is required",
+      message: "Client error",
       statusCode: 400,
       errors: [{ field: "name", message: "Organisation name is required" }]
     });
@@ -28,13 +28,6 @@ const createOrganisation = async (req, res) => {
     });
   } catch (error) {
     console.error(error);
-    if (error instanceof Prisma.PrismaClientKnownRequestError) {
-      return res.status(400).json({
-        status: "Bad Request",
-        message: "Client error",
-        statusCode: 400
-      });
-    }
     return res.status(500).json({
       status: "Internal server error",
       message: "Organisation creation unsuccessful"
