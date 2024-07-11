@@ -5,9 +5,10 @@ const createOrganisation = async (req, res) => {
   const { name, description } = req.body;
 
   if (!name) {
-    return res.status(422).json({
+    return res.status(400).json({
       status: "Bad Request",
       message: "Organisation name is required",
+      statusCode: 400,
       errors: [{ field: "name", message: "Organisation name is required" }]
     });
   }
@@ -27,6 +28,13 @@ const createOrganisation = async (req, res) => {
     });
   } catch (error) {
     console.error(error);
+    if (error instanceof Prisma.PrismaClientKnownRequestError) {
+      return res.status(400).json({
+        status: "Bad Request",
+        message: "Client error",
+        statusCode: 400
+      });
+    }
     return res.status(500).json({
       status: "Internal server error",
       message: "Organisation creation unsuccessful"
@@ -34,19 +42,35 @@ const createOrganisation = async (req, res) => {
   }
 };
 
+
 const getUserOrganisations = async (req, res) => {
-  const userId = req.user.userId; // assuming req.user is populated by a middleware
+  const userId = req.user.userId;
 
   try {
-    const organisations = await prisma.user.findUnique({
+    const userWithOrganisations = await prisma.user.findUnique({
       where: { userId },
       include: { organisations: true }
     });
 
+    if (!userWithOrganisations) {
+      return res.status(404).json({
+        status: "Not Found",
+        message: "User not found"
+      });
+    }
+
+    const organisations = userWithOrganisations.organisations.map(org => ({
+      orgId: org.orgId,
+      name: org.name,
+      description: org.description || ''
+    }));
+
     return res.status(200).json({
       status: "success",
       message: "User organisations retrieved successfully",
-      data: organisations.organisations
+      data: {
+        organisations
+      }
     });
   } catch (error) {
     console.error(error);
@@ -56,6 +80,7 @@ const getUserOrganisations = async (req, res) => {
     });
   }
 };
+
 
 const getOrganisation = async (req, res) => {
   const { orgId } = req.params;
@@ -75,7 +100,11 @@ const getOrganisation = async (req, res) => {
     return res.status(200).json({
       status: "success",
       message: "Organisation retrieved successfully",
-      data: organisation
+      data: {
+        orgId: organisation.orgId,
+        name: organisation.name,
+        description: organisation.description || ''
+      }
     });
   } catch (error) {
     console.error(error);
@@ -85,6 +114,7 @@ const getOrganisation = async (req, res) => {
     });
   }
 };
+
 
 const addUserToOrganisation = async (req, res) => {
   const { orgId } = req.params;

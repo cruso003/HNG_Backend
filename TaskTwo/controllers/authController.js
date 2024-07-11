@@ -23,7 +23,7 @@ const register = async (req, res) => {
     if (existingUser) {
       return res.status(422).json({
         status: 'Bad request',
-        message: 'Registration unsuccessful, user already exists'
+        errors: [{ field: "email", message: "Registration unsuccessful, user already exists" }]
       });
     }
 
@@ -50,6 +50,7 @@ const register = async (req, res) => {
 
     return res.status(201).json({
       status: 'success',
+      message: 'Registration successful',
       data: {
         accessToken,
         user: {
@@ -70,11 +71,14 @@ const register = async (req, res) => {
   }
 };
 
+
 const login = async (req, res) => {
   const { email, password } = req.body;
 
   if (!email || !password) {
     return res.status(422).json({
+      status: "Bad request",
+      message: "Email and password are required",
       errors: [
         ...(email ? [] : [{ field: "email", message: "Email is required" }]),
         ...(password ? [] : [{ field: "password", message: "Password is required" }])
@@ -87,7 +91,7 @@ const login = async (req, res) => {
 
     if (!user) {
       return res.status(401).json({
-        status: "Unauthorized",
+        status: "Bad request",
         message: "Authentication failed",
       });
     }
@@ -96,7 +100,7 @@ const login = async (req, res) => {
 
     if (!validPassword) {
       return res.status(401).json({
-        status: "Unauthorized",
+        status: "Bad request",
         message: "Authentication failed",
       });
     }
