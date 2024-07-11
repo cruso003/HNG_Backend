@@ -3,6 +3,7 @@ const bodyParser = require('body-parser');
 const { PrismaClient } = require('@prisma/client');
 const authRoutes = require('./routes/authRoutes');
 const organisationRoutes = require('./routes/organisationRoutes');
+const userRoutes = require('./routes/userRoutes');
 
 const prisma = new PrismaClient();
 const app = express();
@@ -10,6 +11,7 @@ const app = express();
 app.use(bodyParser.json());
 app.use('/auth', authRoutes);
 app.use('/api/organisations', organisationRoutes);
+app.use('/api/users', userRoutes);
 
 // Serve a welcome HTML page at the root route
 app.get('/', (req, res) => {
