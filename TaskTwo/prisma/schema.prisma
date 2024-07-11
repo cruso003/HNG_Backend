@@ -1,26 +1,16 @@
-datasource db {
-  provider = "postgresql"
-  url      = env("DATABASE_URL")
-}
-
-generator client {
-  provider      = "prisma-client-js"
-  binaryTargets = ["native", "rhel-openssl-3.0.x"]
-}
-
 model User {
-  userId    String   @id @default(uuid())
-  firstName String
-  lastName  String
-  email     String   @unique
-  password  String
-  phone     String?
-  organisations Organisation[]
+  userId       String        @id @default(uuid())
+  firstName    String
+  lastName     String
+  email        String        @unique
+  password     String
+  phone        String?
+  organisations Organisation[] @relation("UserToOrganisation") @map("organizations")
 }
 
 model Organisation {
-  orgId       String   @id @default(uuid())
+  orgId       String        @id @default(uuid())
   name        String
   description String?
-  users       User[]
+  users       User[]        @relation("UserToOrganisation") @map("users")
 }
