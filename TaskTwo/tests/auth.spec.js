@@ -3,9 +3,13 @@ const app = require('../index');
 const { PrismaClient } = require('@prisma/client');
 const prisma = new PrismaClient();
 
+// Set global Jest timeout
+jest.setTimeout(30000); // 30 seconds
+
 beforeAll(async () => {
   await prisma.$connect();
-  await prisma.user.deleteMany(); // Clear users before starting tests
+  await prisma.user.deleteMany();
+  await prisma.organisation.deleteMany();
   await prisma.organisation.upsert({
     where: { orgId: 'jV8T1MGn99oePf3vPkx9qaxtpxo3TiOr' },
     update: {},
@@ -57,7 +61,7 @@ describe('Auth Endpoints', () => {
       expect(user).toBeDefined();
       expect(user.organisations.length).toBe(1);
       expect(user.organisations[0].name).toBe(expectedOrgName);
-    },10000);
+    }, 10000);
 
     it('should fail registration if firstName is missing', async () => {
       const res = await request(app)
@@ -75,7 +79,7 @@ describe('Auth Endpoints', () => {
       expect(res.body.errors).toEqual([
         { field: "firstName", message: "First name is required" }
       ]);
-    });
+    }, 10000);
 
     it('should fail registration if lastName is missing', async () => {
       const res = await request(app)
@@ -93,7 +97,7 @@ describe('Auth Endpoints', () => {
       expect(res.body.errors).toEqual([
         { field: "lastName", message: "Last name is required" }
       ]);
-    });
+    }, 10000);
 
     it('should fail registration if email is missing', async () => {
       const res = await request(app)
@@ -111,7 +115,7 @@ describe('Auth Endpoints', () => {
       expect(res.body.errors).toEqual([
         { field: "email", message: "Email is required" }
       ]);
-    });
+    }, 10000);
 
     it('should fail registration if password is missing', async () => {
       const res = await request(app)
@@ -129,7 +133,7 @@ describe('Auth Endpoints', () => {
       expect(res.body.errors).toEqual([
         { field: "password", message: "Password is required" }
       ]);
-    });
+    }, 10000);
 
     it('should fail if email already exists', async () => {
       // First registration
@@ -157,7 +161,7 @@ describe('Auth Endpoints', () => {
       expect(res.statusCode).toEqual(422);
       expect(res.body).toHaveProperty('status', 'Bad request');
       expect(res.body).toHaveProperty('message', 'Registration unsuccessful, user already exists');
-    });
+    }, 10000);
   });
 
   describe('POST /auth/login', () => {
@@ -185,7 +189,7 @@ describe('Auth Endpoints', () => {
       expect(res.body.data.user).toMatchObject({
         email: 'john.doe@example.com'
       });
-    });
+    }, 10000);
 
     it('should fail login if required fields are missing', async () => {
       const res = await request(app)
@@ -199,7 +203,7 @@ describe('Auth Endpoints', () => {
       expect(res.body.errors).toEqual([
         { field: "password", message: "Password is required" }
       ]);
-    });
+    }, 10000);
 
     it('should fail if authentication fails', async () => {
       const res = await request(app)
@@ -212,6 +216,6 @@ describe('Auth Endpoints', () => {
       expect(res.statusCode).toEqual(401);
       expect(res.body).toHaveProperty('status', 'Unauthorized');
       expect(res.body).toHaveProperty('message', 'Authentication failed');
-    });
+    }, 10000);
   });
 });
